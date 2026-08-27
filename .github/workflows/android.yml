@@ -32,7 +32,12 @@ jobs:
         run: npm install --ignore-scripts
 
 
-      # Capacitor同步Android
+      # 构建前端
+      - name: Build Web App
+        run: npm run build
+
+
+      # 同步 Capacitor Android
       - name: Capacitor sync
         run: npx cap sync android
 
