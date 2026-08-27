@@ -15,12 +15,29 @@ jobs:
 
     steps:
 
-      # 拉取代码
       - name: Checkout
         uses: actions/checkout@v4
 
 
-      # 配置 Java 环境
+      # Node 环境（Capacitor需要）
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+
+      # 安装前端依赖
+      - name: Install dependencies
+        run: npm install
+
+
+      # 配置 Android
+      - name: Capacitor sync
+        run: npx cap sync android
+
+
+      # Java环境
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
@@ -29,7 +46,7 @@ jobs:
           cache: gradle
 
 
-      # 构建 Android APK
+      # 编译APK
       - name: Build APK
         working-directory: android
         run: |
@@ -37,7 +54,7 @@ jobs:
           ./gradlew assembleDebug
 
 
-      # 上传 APK 文件
+      # 上传APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
