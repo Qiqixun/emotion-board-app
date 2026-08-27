@@ -25,6 +25,7 @@ const HomePage: React.FC = () => {
       console.log('开始创建房间');
 
       const res: CreateRoomResponse = await emotion.createRoom();
+      console.log("创建房间返回数据:", JSON.stringify(res));
 
       console.log('服务器返回:', res);
 
