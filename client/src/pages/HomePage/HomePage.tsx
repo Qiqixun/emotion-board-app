@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
 
       console.log(
         '服务器返回:',
-        response
+         JSON.stringify(response, null, 2)
       );
 
 
@@ -60,11 +60,20 @@ const HomePage: React.FC = () => {
 
 
 
-      if (
-        !roomData?.roomId ||
-        !roomData?.roomCode ||
-        roomData?.playerIndex === undefined
-      ) {
+      if (!roomData) {
+
+  console.error(
+    '服务器返回为空:',
+    response
+  );
+
+  toast.error(
+    '服务器没有返回数据'
+  );
+
+  return;
+
+}
 
 
         console.error(
@@ -84,21 +93,22 @@ const HomePage: React.FC = () => {
 
 
 
-      const roomInfo = {
+    const roomInfo = {
 
-        roomId:
-          String(roomData.roomId),
+  roomId: String(
+    roomData.roomId || roomData.id || ''
+  ),
 
+  roomCode: String(
+    roomData.roomCode || roomData.code || ''
+  ),
 
-        roomCode:
-          String(roomData.roomCode),
+  playerIndex:
+    Number(
+      roomData.playerIndex || 1
+    ) as 1 | 2,
 
-
-        playerIndex:
-          Number(roomData.playerIndex) as 1 | 2,
-
-      };
-
+};
 
 
       localStorage.setItem(
