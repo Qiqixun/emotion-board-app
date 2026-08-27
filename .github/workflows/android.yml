@@ -5,20 +5,41 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
+
+      # 拉取代码
       - name: Checkout
         uses: actions/checkout@v4
 
+
+      # 配置 Java 环境
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
 
+
+      # 构建 Android APK
       - name: Build APK
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+
+      # 上传 APK 文件
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
