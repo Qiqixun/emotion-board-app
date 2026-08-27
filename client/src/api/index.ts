@@ -1,5 +1,10 @@
 import { logger } from '@lark-apaas/client-toolkit/logger';
-import { axiosForBackend } from '@lark-apaas/client-toolkit/utils/getAxiosForBackend';
+import axios from 'axios';
+
+const axiosForBackend = axios.create({
+  baseURL: 'http://192.168.10.24:3000',
+  timeout: 10000,
+});
 
 export const emotion = {
   createRoom: async () => {
