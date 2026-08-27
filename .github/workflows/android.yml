@@ -34,7 +34,9 @@ jobs:
 
       # 构建前端
       - name: Build Web App
-        run: npm run build
+        run: |
+          chmod +x scripts/build.sh
+          npm run build
 
 
       # 同步 Capacitor Android
