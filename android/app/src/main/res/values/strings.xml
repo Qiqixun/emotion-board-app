@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Emotion Board</string>
+    <string name="title_activity_main">Emotion Board</string>
+    <string name="package_name">com.emotion.board</string>
+    <string name="custom_url_scheme">com.emotion.board</string>
+</resources>
