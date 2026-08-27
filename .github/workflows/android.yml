@@ -36,7 +36,7 @@ jobs:
       - name: Build Web App
         run: |
           chmod +x scripts/*.sh
-          echo "front" | npm run build
+          printf "front\nclient\n" | npm run build
 
 
       # 同步 Capacitor Android
