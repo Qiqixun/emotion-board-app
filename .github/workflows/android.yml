@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
 
-          # Node 环境
+      # Node 环境
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -30,11 +30,12 @@ jobs:
       # 安装依赖
       - name: Install dependencies
         run: npm install --ignore-scripts
+
       - name: Install build dependencies
         run: npm install @vercel/nft --save-dev
 
 
-      # 构建前端
+      # 构建 Web 前端
       - name: Build Web App
         run: |
           chmod +x scripts/*.sh
@@ -45,16 +46,17 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
-      # Java环境
+
+      # Java 环境
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
           cache: gradle
 
 
-      # 编译APK
+      # 编译 APK
       - name: Build APK
         working-directory: android
         run: |
@@ -62,7 +64,7 @@ jobs:
           ./gradlew assembleDebug
 
 
-      # 上传APK
+      # 上传 APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
