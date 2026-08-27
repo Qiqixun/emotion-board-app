@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { emotion } from '@client/src/api';
 
+
 const ROOM_STORAGE_KEY = 'emotion_room_info';
 
 
@@ -28,29 +29,23 @@ const HomePage: React.FC = () => {
 
     try {
 
-
-      console.log(
-        '开始创建房间'
-      );
+      console.log('开始创建房间');
 
 
       const response =
         await emotion.createRoom();
 
 
-
       console.log(
         '服务器返回:',
-         JSON.stringify(response, null, 2)
+        JSON.stringify(response, null, 2)
       );
 
 
-
-      // 兼容 axios 返回格式
+      // 兼容 axios 返回
       const roomData =
         (response as any)?.data ??
         response;
-
 
 
       console.log(
@@ -62,23 +57,69 @@ const HomePage: React.FC = () => {
 
       if (!roomData) {
 
-  console.error(
-    '服务器返回为空:',
-    response
-  );
+        console.error(
+          '服务器返回为空:',
+          response
+        );
 
-  toast.error(
-    '服务器没有返回数据'
-  );
 
-  return;
+        toast.error(
+          '服务器没有返回数据'
+        );
 
-}
+
+        return;
+
+      }
+
+
+
+      const roomInfo = {
+
+
+        roomId: String(
+          roomData.roomId ??
+          roomData.id ??
+          ''
+        ),
+
+
+        roomCode: String(
+          roomData.roomCode ??
+          roomData.code ??
+          ''
+        ),
+
+
+        playerIndex:
+          Number(
+            roomData.playerIndex ??
+            1
+          ) as 1 | 2,
+
+
+      };
+
+
+
+      console.log(
+        '保存房间信息:',
+        roomInfo
+      );
+
+
+
+      // 判断数据是否正确
+
+      if (
+        !roomInfo.roomId ||
+        !roomInfo.roomCode
+      ) {
 
 
         console.error(
           '房间数据错误:',
-          roomData
+          roomInfo
         );
 
 
@@ -91,24 +132,6 @@ const HomePage: React.FC = () => {
 
       }
 
-
-
-    const roomInfo = {
-
-  roomId: String(
-    roomData.roomId || roomData.id || ''
-  ),
-
-  roomCode: String(
-    roomData.roomCode || roomData.code || ''
-  ),
-
-  playerIndex:
-    Number(
-      roomData.playerIndex || 1
-    ) as 1 | 2,
-
-};
 
 
       localStorage.setItem(
@@ -127,13 +150,23 @@ const HomePage: React.FC = () => {
 
 
 
-    } catch(error){
+    } catch(error:any) {
 
 
       console.error(
         '创建房间失败:',
         error
       );
+
+
+      if(error?.response){
+
+        console.error(
+          '服务器错误:',
+          error.response.data
+        );
+
+      }
 
 
       toast.error(
@@ -150,23 +183,25 @@ const HomePage: React.FC = () => {
 
     }
 
-
   };
 
 
 
 
+
+
   // 加入房间
+
   const handleJoinRoom = async () => {
 
 
-    if(!/^\d{6}$/.test(joinCode)){
-
+    if(
+      !/^\d{6}$/.test(joinCode)
+    ){
 
       toast.error(
         '请输入6位数字房间码'
       );
-
 
       return;
 
@@ -178,7 +213,7 @@ const HomePage: React.FC = () => {
 
 
 
-    try{
+    try {
 
 
       const response =
@@ -206,6 +241,7 @@ const HomePage: React.FC = () => {
         playerIndex:
           Number(roomData.playerIndex) as 1 | 2,
 
+
       };
 
 
@@ -226,7 +262,7 @@ const HomePage: React.FC = () => {
 
 
 
-    }catch(error:any){
+    } catch(error:any) {
 
 
       console.error(
@@ -240,14 +276,14 @@ const HomePage: React.FC = () => {
       );
 
 
-    }finally{
+
+    } finally {
 
 
       setLoading(null);
 
 
     }
-
 
   };
 
@@ -256,13 +292,15 @@ const HomePage: React.FC = () => {
 
 
   const handleCodeChange =
-    (e:React.ChangeEvent<HTMLInputElement>)=>{
+    (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
 
 
       const value =
         e.target.value
-        .replace(/\D/g,'')
-        .slice(0,6);
+          .replace(/\D/g,'')
+          .slice(0,6);
 
 
 
@@ -270,6 +308,7 @@ const HomePage: React.FC = () => {
 
 
     };
+
 
 
 
@@ -304,6 +343,7 @@ const HomePage: React.FC = () => {
       >
 
 
+
         <div
           className="
           flex
@@ -334,6 +374,7 @@ const HomePage: React.FC = () => {
 
 
 
+
         <div
           className="
           mt-8
@@ -344,12 +385,13 @@ const HomePage: React.FC = () => {
         >
 
 
+
           <button
 
             onClick={handleCreateRoom}
 
             disabled={
-              loading!==null
+              loading !== null
             }
 
             className="
@@ -361,8 +403,9 @@ const HomePage: React.FC = () => {
             "
           >
 
+
             {
-              loading==='create'
+              loading === 'create'
               ?
               '创建中...'
               :
@@ -375,14 +418,17 @@ const HomePage: React.FC = () => {
 
 
 
+
           {
             !showJoinInput ?
 
+
             <button
 
-              onClick={()=>
+              onClick={() =>
                 setShowJoinInput(true)
               }
+
 
               className="
               h-12
@@ -400,12 +446,8 @@ const HomePage: React.FC = () => {
 
             :
 
-            <div
-              className="
-              flex
-              gap-2
-              "
-            >
+
+            <div className="flex gap-2">
 
 
               <input
@@ -422,8 +464,8 @@ const HomePage: React.FC = () => {
                 rounded-xl
                 px-3
                 "
-              />
 
+              />
 
 
               <button
@@ -431,7 +473,7 @@ const HomePage: React.FC = () => {
                 onClick={handleJoinRoom}
 
                 disabled={
-                  joinCode.length!==6
+                  joinCode.length !== 6
                 }
 
                 className="
@@ -440,10 +482,11 @@ const HomePage: React.FC = () => {
                 bg-pink-500
                 text-white
                 "
+
               >
 
                 {
-                  loading==='join'
+                  loading === 'join'
                   ?
                   '...'
                   :
@@ -454,13 +497,15 @@ const HomePage: React.FC = () => {
               </button>
 
 
-
             </div>
 
           }
 
 
+
         </div>
+
+
 
 
 
