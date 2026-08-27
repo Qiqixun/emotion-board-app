@@ -16,8 +16,9 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Build APK
+        working-directory: android
         run: ./gradlew assembleDebug
